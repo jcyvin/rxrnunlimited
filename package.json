@@ -1,0 +1,10 @@
+{
+  "name": "rxrn-site",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "npx vercel dev --listen 3000",
+    "preview": "npx vercel dev",
+    "deploy": "npx vercel --prod"
+  }
+}

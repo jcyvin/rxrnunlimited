@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>RxRN — Product</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav class="nav">
+      <div class="container nav-inner">
+        <div class="brand">RxRN</div>
+        <div class="nav-actions">
+          <a class="btn btn-ghost" href="#benefits">Benefits</a>
+          <a class="btn btn-ghost" href="#stories">Stories</a>
+          <a class="btn" href="#buy">Buy</a>
+        </div>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="container">
+        <h1>Real Results. Real People.</h1>
+        <p class="lead">Our product supports measurable fitness gains — see real before/after metrics and customer stories.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#buy">Shop Now</a>
+          <a class="btn btn-outline" href="#stories">Read Stories</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section id="buy" class="section">
+        <h2>Where to buy</h2>
+        <p>Purchase on your preferred store:</p>
+        <div class="links">
+          <a class="store" target="_blank" rel="noopener" href="https://example-store-a.com">Store A</a>
+          <a class="store" target="_blank" rel="noopener" href="https://example-store-b.com">Store B</a>
+          <a class="store" target="_blank" rel="noopener" href="https://example-store-c.com">Store C</a>
+        </div>
+      </section>
+
+      <section id="benefits" class="section">
+        <h2>Proven Benefits</h2>
+        <p>Aggregate results from customer reports and clinical metrics.</p>
+        <div class="cards" id="benefit-cards">
+          <div class="card">
+            <h3>+12% Strength</h3>
+            <p>Average increase in measured strength after 8 weeks.</p>
+          </div>
+          <div class="card">
+            <h3>-6% Body Fat</h3>
+            <p>Average reduction in body fat percentage over 12 weeks.</p>
+          </div>
+          <div class="card">
+            <h3>+9% Endurance</h3>
+            <p>Measured improvement in endurance tests.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="stories" class="section">
+        <h2>Customer Stories</h2>
+        <p>Share your story — we may feature it on the site.</p>
+        <div class="stories-grid">
+          <form id="story-form" class="story-form">
+            <label>Full name <input name="name" required /></label>
+            <label>Short title <input name="title" required /></label>
+            <label>Story <textarea name="body" rows="4" required></textarea></label>
+            <label>Before/After metrics (optional) <input name="metrics" placeholder="e.g. -5% body fat, +10% strength"/></label>
+            <div class="form-actions">
+              <button class="btn btn-primary" type="submit">Post Story</button>
+              <button class="btn btn-ghost" id="clear-stories" type="button">Clear Local Stories</button>
+            </div>
+          </form>
+
+          <div class="stories-list" id="stories-list" aria-live="polite"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div>
+          <strong>RxRN</strong>
+          <p>Support and product links</p>
+        </div>
+        <div class="social">
+          <a target="_blank" rel="noopener" href="https://www.facebook.com/precy.lim.5">Facebook</a>
+          <a target="_blank" rel="noopener" href="https://www.instagram.com/bang87bc?fbclid=IwZXh0bgNhZW0CMTAAYnJpZBEyVWwxUGZ6dU5FWlBWOG9ScHNydGMGYXBwX2lkEDIyMjAzOTE3ODgyMDA4OTIAAR490XVLYOd6VNdTyVeklOd_rktqoiPgQQrVoXCGrd26gdhhSlCEbtpRJWG3Xw_aem_NtTa2y5T-KFgafn8Mvhp_w">Instagram</a>
+          <a target="_blank" rel="noopener" href="https://twitter.com/yourpage">Twitter</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="scripts.js"></script>
+  </body>
+</html>
