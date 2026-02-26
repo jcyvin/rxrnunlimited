@@ -21,7 +21,8 @@ app.post('/set-credentials', (req, res) => {
   process.env.APP_ID = String(appId);
   process.env.APP_SECRET = String(appSecret);
   process.env.APP_TOKEN = `${process.env.APP_ID}|${process.env.APP_SECRET}`;
-  console.log('Credentials set via /set-credentials; APP_TOKEN configured for this process.');
+  // minimal acknowledgement for local runtime
+  console.info('App credentials configured for this process.');
   return res.json({ ok: true });
 });
 
@@ -154,6 +155,6 @@ app.get('/scrape', async (req, res) => {
 });
 
 app.listen(PORT, ()=>{
-  console.log(`Local helper server listening on http://localhost:${PORT}`);
-  console.log('Endpoint: GET /latest?profile=https://www.facebook.com/username');
+  console.info(`Local helper server listening on http://localhost:${PORT}`);
+  console.info('Endpoint: GET /latest?profile=https://www.facebook.com/username');
 });

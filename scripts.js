@@ -2,6 +2,8 @@
 document.addEventListener('DOMContentLoaded', ()=>{
 	const status = document.getElementById('recent-status');
 	const list = document.getElementById('recent-posts-list');
+	// If the stories/recent-posts section was removed, do nothing
+	if(!status || !list) return;
 
 	// credential inputs and save
 	const appIdInput = document.getElementById('app-id');

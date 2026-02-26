@@ -10,7 +10,10 @@
     
     <nav class="nav">
       <div class="container nav-inner">
-        <div class="brand">RxRN</div>
+        <div class="brand">
+          <img src="logo.png" alt="RxRN logo" class="logo" />
+          <span class="brand-text">RxRN</span>
+        </div>
         <div class="nav-actions">
           <a class="btn btn-ghost" href="#benefits">Benefits</a>
           <a class="btn btn-ghost" href="#stories">Stories</a>
@@ -60,20 +63,7 @@
         </div>
       </section>
 
-      <section id="stories" class="section">
-        <h2>Customer Stories</h2>
-        <p class="muted">Below is a preview of recent public posts from the Facebook profile: <strong>https://www.facebook.com/profile.php?id=61588645477758</strong></p>
-        <div id="recent-posts">
-          <div style="margin-bottom:.5rem">
-            <label style="margin-right:.5rem">App ID <input id="app-id" placeholder="App ID" style="width:200px" /></label>
-            <label style="margin-right:.5rem">App Secret <input id="app-secret" placeholder="App Secret" style="width:300px" /></label>
-            <button class="btn" id="save-creds">Save</button>
-          </div>
-          <div id="recent-status" class="muted">Loading recent posts...</div>
-          <ul id="recent-posts-list" style="margin-top:.5rem"></ul>
-          <p class="muted small">Note: This uses a local helper at <code>http://localhost:3001/recent?profile=PROFILE_URL</code>. If you don't run the helper, the preview will show an instruction.</p>
-        </div>
-      </section>
+      <!-- Customer Stories section removed -->
     </main>
 
     <footer class="footer">

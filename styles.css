@@ -8,7 +8,10 @@ html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,"Segoe 
 /* Nav */
 .nav{background:transparent}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:1rem 0}
-.brand{font-weight:700;font-size:1.125rem}
+.brand{font-weight:700;font-size:1.125rem;display:flex;align-items:center;gap:.5rem}
+.brand img.logo{height:48px;width:auto;display:inline-block;object-fit:contain}
+.brand img.logo[src$=".png"]{background:transparent}
+.brand .brand-text{display:inline-block}
 .nav-actions a{margin-left:.5rem}
 
 /* Hero */
