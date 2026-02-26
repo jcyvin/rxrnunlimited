@@ -1,51 +1,89 @@
-// Client-side stories feature using localStorage
+// Recent posts preview for a fixed profile (alvin.lim.180)
 document.addEventListener('DOMContentLoaded', ()=>{
-  const form = document.getElementById('story-form');
-  const list = document.getElementById('stories-list');
-  const clearBtn = document.getElementById('clear-stories');
+	const status = document.getElementById('recent-status');
+	const list = document.getElementById('recent-posts-list');
 
-  function readStories(){
-    try{const raw = localStorage.getItem('rxrn_stories'); return raw?JSON.parse(raw):[] }catch(e){return[]}
-  }
-  function writeStories(arr){ localStorage.setItem('rxrn_stories', JSON.stringify(arr)) }
+	// credential inputs and save
+	const appIdInput = document.getElementById('app-id');
+	const appSecretInput = document.getElementById('app-secret');
+	const saveCredsBtn = document.getElementById('save-creds');
+	if(saveCredsBtn){
+		saveCredsBtn.addEventListener('click', async ()=>{
+			const appId = (appIdInput && appIdInput.value||'').trim();
+			const appSecret = (appSecretInput && appSecretInput.value||'').trim();
+			if(!appId || !appSecret){ alert('Enter both App ID and App Secret'); return }
+			try{
+				setStatus('Saving credentials...');
+				const r = await fetch('http://localhost:3001/set-credentials',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({appId,appSecret})});
+				if(!r.ok){ const t = await r.text(); setStatus('Failed to save credentials: '+t); return }
+				setStatus('Credentials saved — fetching posts...');
+				fetchRecent();
+			}catch(err){ setStatus('Failed to save credentials: '+String(err)) }
+		})
+	}
+	function setStatus(msg){ if(status) status.textContent = msg }
 
-  function render(){
-    const stories = readStories();
-    list.innerHTML = '';
-    if(stories.length===0){
-      list.innerHTML = '<p class="muted">No stories yet — be the first to share!</p>';
-      return;
-    }
-    stories.slice().reverse().forEach(s=>{
-      const el = document.createElement('article'); el.className='story';
-      el.innerHTML = `<div class="meta"><strong>${escapeHtml(s.name)}</strong> — ${escapeHtml(s.title)}${s.metrics?` · <em>${escapeHtml(s.metrics)}</em>`:''}</div><p>${escapeHtml(s.body)}</p><div style="margin-top:.5rem;text-align:right"><button data-id="${s.id}" class="btn btn-ghost delete">Delete</button></div>`;
-      list.appendChild(el);
-    })
-    // attach delete handlers
-    list.querySelectorAll('.delete').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const id = btn.getAttribute('data-id');
-        const next = readStories().filter(x=>x.id!==id); writeStories(next); render();
-      })
-    })
-  }
+	async function fetchRecent(){
+		const fixedProfile = 'https://www.facebook.com/profile.php?id=61588645477758';
+		setStatus('Trying helper API (/recent)...');
+		let used = false;
+		try{
+			const res = await fetch('http://localhost:3001/recent?profile='+encodeURIComponent(fixedProfile)+'&limit=5');
+			if(res.ok){
+				const data = await res.json();
+				if(data && Array.isArray(data.posts) && data.posts.length>0){
+					used = true;
+					setStatus('');
+					list.innerHTML = '';
+					// Embed the first post using Facebook XFBML if available
+					const first = data.posts[0];
+					const firstUrl = first.permalink_url || fixedProfile;
+					const fbContainer = document.createElement('div');
+					fbContainer.className = 'fb-post';
+					fbContainer.setAttribute('data-href', firstUrl);
+					fbContainer.setAttribute('data-width', '500');
+					list.appendChild(fbContainer);
+					// parse if FB SDK loaded
+					try{ if(window.FB && typeof FB.XFBML.parse === 'function'){ FB.XFBML.parse(); } }
+					catch(e){ /* ignore */ }
+					// Add remaining posts as links
+					for(let i=1;i<data.posts.length;i++){
+						const p = data.posts[i];
+						const li = document.createElement('li');
+						const time = p.created_time? new Date(p.created_time).toLocaleString() : '';
+						const msg = p.message? (p.message.length>200? p.message.slice(0,200)+'…' : p.message) : '';
+						li.innerHTML = `<a target="_blank" rel="noopener" href="${escapeHtml(p.permalink_url||fixedProfile)}">${escapeHtml(msg||p.permalink_url||'View post')}</a> <span class="muted small">${escapeHtml(time)}</span>`;
+						list.appendChild(li);
+					}
+				}
+			}
+		}catch(err){
+			// ignore and try scrape fallback
+		}
 
-  form.addEventListener('submit', e=>{
-    e.preventDefault();
-    const fd = new FormData(form);
-    const story = { id: String(Date.now()), name: fd.get('name')||'Anonymous', title: fd.get('title')||'', body: fd.get('body')||'', metrics: fd.get('metrics')||'', created: new Date().toISOString() };
-    const curr = readStories(); curr.push(story); writeStories(curr); form.reset(); render();
-  })
+		if(used) return;
+		// fallback: try scraping endpoint
+		setStatus('Falling back to scraper (/scrape)...');
+		try{
+			const r2 = await fetch('http://localhost:3001/scrape?profile='+encodeURIComponent(fixedProfile)+'&limit=5');
+			if(!r2.ok){ throw new Error('scrape-unavailable') }
+			const d2 = await r2.json();
+			if(!d2 || !Array.isArray(d2.posts) || d2.posts.length===0){ setStatus('No posts found by scraper.'); return }
+			setStatus(''); list.innerHTML = '';
+			d2.posts.forEach(p=>{
+				const li = document.createElement('li');
+				li.innerHTML = `<a target="_blank" rel="noopener" href="${escapeHtml(p.permalink_url||fixedProfile)}">${escapeHtml(p.permalink_url||'View post')}</a>`;
+				list.appendChild(li);
+			})
+		}catch(err){
+			setStatus('Local helper not running or failed. Start it with `npm run server` or run with APP_TOKEN if using the API.');
+			list.innerHTML = '';
+		}
+	}
 
-  clearBtn.addEventListener('click', ()=>{ if(confirm('Clear all stories from local browser storage?')){ localStorage.removeItem('rxrn_stories'); render(); } })
-
-  // Seed with one example if empty
-  if(readStories().length===0){
-    writeStories([{id:'seed-1',name:'Alex Morgan',title:'Lost 7% body fat',body:'After 10 weeks I saw great changes in energy and body composition.',metrics:'-7% body fat, +8% strength',created:new Date().toISOString()}])
-  }
-  render();
+	fetchRecent();
 });
 
 function escapeHtml(str){
-  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')
+	return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;')
 }

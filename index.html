@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    
     <nav class="nav">
       <div class="container nav-inner">
         <div class="brand">RxRN</div>
@@ -61,20 +62,16 @@
 
       <section id="stories" class="section">
         <h2>Customer Stories</h2>
-        <p>Share your story — we may feature it on the site.</p>
-        <div class="stories-grid">
-          <form id="story-form" class="story-form">
-            <label>Full name <input name="name" required /></label>
-            <label>Short title <input name="title" required /></label>
-            <label>Story <textarea name="body" rows="4" required></textarea></label>
-            <label>Before/After metrics (optional) <input name="metrics" placeholder="e.g. -5% body fat, +10% strength"/></label>
-            <div class="form-actions">
-              <button class="btn btn-primary" type="submit">Post Story</button>
-              <button class="btn btn-ghost" id="clear-stories" type="button">Clear Local Stories</button>
-            </div>
-          </form>
-
-          <div class="stories-list" id="stories-list" aria-live="polite"></div>
+        <p class="muted">Below is a preview of recent public posts from the Facebook profile: <strong>https://www.facebook.com/profile.php?id=61588645477758</strong></p>
+        <div id="recent-posts">
+          <div style="margin-bottom:.5rem">
+            <label style="margin-right:.5rem">App ID <input id="app-id" placeholder="App ID" style="width:200px" /></label>
+            <label style="margin-right:.5rem">App Secret <input id="app-secret" placeholder="App Secret" style="width:300px" /></label>
+            <button class="btn" id="save-creds">Save</button>
+          </div>
+          <div id="recent-status" class="muted">Loading recent posts...</div>
+          <ul id="recent-posts-list" style="margin-top:.5rem"></ul>
+          <p class="muted small">Note: This uses a local helper at <code>http://localhost:3001/recent?profile=PROFILE_URL</code>. If you don't run the helper, the preview will show an instruction.</p>
         </div>
       </section>
     </main>
@@ -93,6 +90,8 @@
       </div>
     </footer>
 
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v25.0&appId=APP_ID"></script>
     <script src="scripts.js"></script>
   </body>
 </html>

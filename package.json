@@ -5,6 +5,11 @@
   "scripts": {
     "start": "npx vercel dev --listen 3000",
     "preview": "npx vercel dev",
-    "deploy": "npx vercel --prod"
+    "deploy": "npx vercel --prod",
+    "server": "node server.js"
+  }
+  ,"dependencies": {
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.7"
   }
 }
