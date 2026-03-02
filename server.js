@@ -37,48 +37,6 @@ if(!fetchFn){
   }
 }
 
-function extractUsername(profileUrl){
-  try{
-    const u = new URL(profileUrl);
-    // facebook.com/<username> or facebook.com/profile.php?id=123
-    if(u.pathname && u.pathname !== '/'){
-      // strip leading /
-      return u.pathname.replace(/^\//,'').replace(/\/.*/,'');
-    }
-    if(u.searchParams && u.searchParams.get('id')) return u.searchParams.get('id');
-  }catch(e){
-    // maybe it's already a username
-    return profileUrl;
-  }
-  return profileUrl;
-}
-
-app.get('/latest', async (req, res) => {
-  const profile = req.query.profile;
-  if(!profile) return res.status(400).json({error:'missing profile parameter'});
-  const token = process.env.APP_TOKEN;
-  if(!token) return res.status(500).json({error:'APP_TOKEN not set in environment'});
-
-  const username = extractUsername(profile);
-
-  try{
-    const url = `https://graph.facebook.com/v17.0/${encodeURIComponent(username)}/posts?fields=permalink_url,created_time&limit=10&access_token=${encodeURIComponent(token)}`;
-    const r = await fetch(url);
-    if(!r.ok){
-      const txt = await r.text();
-      return res.status(502).json({error:'graph_error','detail':txt});
-    }
-    const j = await r.json();
-    if(j && Array.isArray(j.data) && j.data.length>0){
-      // prefer the most recent with a permalink
-      const found = j.data.find(p=>p.permalink_url) || j.data[0];
-      return res.json({post_url: found.permalink_url, raw: found});
-    }
-    return res.status(404).json({error:'no_posts_found'});
-  }catch(err){
-    return res.status(500).json({error:'server_error', detail: String(err)});
-  }
-});
 
 // Return recent posts (permalink_url, message, created_time)
 app.get('/recent', async (req, res) => {
